@@ -111,7 +111,7 @@ class App extends Component {
 	};
 
 	foundWords = () => {
-		const { found, gameEnded } = this.state;
+		const { found } = this.state;
 		var foundWords = found.map((word) => {
 			return <div>{word}</div>;
 		});
