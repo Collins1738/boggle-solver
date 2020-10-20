@@ -5,6 +5,12 @@
  * @param {string[]} dictionary - The list of available words.
  * @returns {string[]} solutions - Possible solutions to the Boggle board.
  */
+
+exports.uppercaseStringArray = function (stringArray) {
+	for (let i = 0; i < stringArray.length; i++)
+		stringArray[i] = stringArray[i].toUpperCase();
+};
+
 exports.findAllSolutions = function (grid, dictionary) {
 	let solutions = [];
 	var word;

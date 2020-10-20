@@ -35,6 +35,11 @@ const dictionary = [
 	"quar",
 ];
 
+function uppercaseStringArray(stringArray) {
+	for (let i = 0; i < stringArray.length; i++) {
+		stringArray[i] = stringArray[i].toUpperCase();
+	}
+}
 class App extends Component {
 	constructor() {
 		super();
@@ -133,7 +138,7 @@ class App extends Component {
 	};
 
 	handleChange(event) {
-		this.setState({ [event.target.id]: event.target.value });
+		this.setState({ [event.target.id]: event.target.value.toUpperCase() });
 	}
 
 	handleSubmit(event) {
@@ -157,6 +162,8 @@ class App extends Component {
 		const { dictionary } = this.state;
 		this.setState({ grid });
 		const solutions = findAllSolutions(grid, dictionary);
+
+		uppercaseStringArray(solutions);
 		this.setState({ solutions });
 	}
 	stopGame() {
