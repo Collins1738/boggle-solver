@@ -6,12 +6,12 @@
  * @returns {string[]} solutions - Possible solutions to the Boggle board.
  */
 
-exports.uppercaseStringArray = function (stringArray) {
+function uppercaseStringArray(stringArray) {
 	for (let i = 0; i < stringArray.length; i++)
 		stringArray[i] = stringArray[i].toUpperCase();
-};
+}
 
-exports.findAllSolutions = function (grid, dictionary) {
+function findAllSolutions(grid, dictionary) {
 	let solutions = [];
 	var word;
 	if (grid.length === 0) return solutions;
@@ -21,7 +21,7 @@ exports.findAllSolutions = function (grid, dictionary) {
 		}
 	}
 	return solutions;
-};
+}
 
 function findWord(word, grid, exceptions = [], previous_cell = undefined) {
 	if (word.length === 0) {
@@ -115,6 +115,7 @@ function getSurroundingCells(cell, length, exceptions = []) {
 	return my_array;
 }
 
+export { findAllSolutions, uppercaseStringArray };
 // const grid = [
 // 	["T", "W", "Y", "R"],
 // 	["E", "N", "P", "H"],
