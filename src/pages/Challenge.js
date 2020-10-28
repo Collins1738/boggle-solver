@@ -113,6 +113,7 @@ class Challenge extends Component {
 			if (!found.includes(word)) {
 				return <div key={word}>{word}</div>;
 			}
+			return;
 		});
 		return gameEnded ? (
 			<div>Remaining Words: {remainingWords}</div>
