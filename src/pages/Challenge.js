@@ -184,7 +184,7 @@ class Challenge extends Component {
 		} else {
 			this.setState({ prompt: `${value} is wrong` });
 		}
-		if (this.state.guessesLeft == 0) {
+		if (this.state.guessesLeft === 0) {
 			this.handleGameOver();
 		}
 		this.setState({ value: "" });
