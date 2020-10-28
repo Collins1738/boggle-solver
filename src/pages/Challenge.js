@@ -109,9 +109,9 @@ class Challenge extends Component {
 
 	remainingWords = () => {
 		const { gameEnded, solutions, found } = this.state;
-		var remainingWords = solutions.forEach((word) => {
+		var remainingWords = solutions.map((word) => {
 			if (!found.includes(word)) {
-				return <div>{word}</div>;
+				return <div key={word}>{word}</div>;
 			}
 		});
 		return gameEnded ? (
@@ -144,11 +144,9 @@ class Challenge extends Component {
 
 	startGame() {
 		const { grid, dictionary } = this.state;
-		this.setState({ gameStarted: true });
 		const solutions = findAllSolutions(grid, dictionary);
-
 		uppercaseStringArray(solutions);
-		this.setState({ solutions });
+		this.setState({ solutions, gameStarted: true });
 	}
 
 	stopGame() {
