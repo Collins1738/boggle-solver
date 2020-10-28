@@ -46,6 +46,7 @@ class Challenge extends Component {
 			username,
 			currentScore,
 			guessesLeft,
+			gameEnded,
 		} = this.state;
 		return (
 			<div align="center">
@@ -83,8 +84,13 @@ class Challenge extends Component {
 								value={value}
 								onChange={this.handleChange}
 								onSubmit={this.handleSubmit}
+								disabled={gameEnded || !gameStarted}
 							/>
-							<button type="submit" onClick={this.handleSubmit}>
+							<button
+								type="submit"
+								onClick={this.handleSubmit}
+								disabled={gameEnded || !gameStarted}
+							>
 								Submit
 							</button>
 						</form>
