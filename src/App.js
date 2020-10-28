@@ -9,19 +9,10 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 class App extends Component {
 	constructor() {
 		super();
-		this.state = {};
+		this.state = { username: "" };
 
 		this.handleSignIn = this.handleSignIn.bind(this);
 		this.handleSignOut = this.handleSignOut.bind(this);
-	}
-
-	handleSignIn() {
-		window.location.href = "/login";
-	}
-
-	handleSignOut() {
-		firebase.auth().signOut();
-		window.location.href = "/challenges";
 	}
 
 	render() {
@@ -30,10 +21,15 @@ class App extends Component {
 				<div className="page">
 					<div className="navbar">
 						<button onClick={this.handleSignIn}>Sign In</button>
+						<button onClick={this.redirectChallenges}>
+							Challenges
+						</button>
 						<button onClick={this.handleSignOut}>Sign Out</button>
 					</div>
 					<h2>Boggle Solver</h2>
-
+					<h1>
+						Welcome {firebase.auth().currentUser?.displayName || ""}
+					</h1>
 					<Router>
 						<Switch>
 							<Route
@@ -53,6 +49,27 @@ class App extends Component {
 				</div>
 			</div>
 		);
+	}
+
+	handleSignIn() {
+		window.location.href = "/login";
+	}
+
+	handleSignOut() {
+		firebase.auth().signOut();
+		window.location.href = "/challenges";
+	}
+
+	redirectChallenges() {
+		window.location.href = "/challenges";
+	}
+
+	componentDidMount() {
+		firebase.auth().onAuthStateChanged((user) => {
+			if (user) {
+				this.setState({ username: user.displayName });
+			}
+		});
 	}
 }
 export default App;

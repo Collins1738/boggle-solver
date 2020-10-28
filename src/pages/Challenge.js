@@ -24,21 +24,91 @@ class Challenge extends Component {
 			gameStarted: false,
 			gameEnded: false,
 			loading: true,
+			highscore: null,
+			currentScore: 0,
+			guessesLeft: 0,
+			username: "Anonymous",
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.handleSubmit = this.handleSubmit.bind(this);
+		this.handleGameOver = this.handleGameOver.bind(this);
 		this.startGame = this.startGame.bind(this);
-		this.stopGame = this.stopGame.bind(this);
 	}
 
+	render() {
+		const {
+			value,
+			prompt,
+			grid,
+			loading,
+			gameStarted,
+			highscore,
+			username,
+			currentScore,
+			guessesLeft,
+		} = this.state;
+		return (
+			<div align="center">
+				{loading ? (
+					<div>Loading...</div>
+				) : (
+					<div>
+						{this.startStopButtons()}
+						{gameStarted ? (
+							<div>
+								<Grid grid={grid} />
+								<h4>
+									Current score: {username} - {currentScore}
+								</h4>
+								<h5>Guesses left: {guessesLeft}</h5>
+							</div>
+						) : (
+							<div></div>
+						)}
+						<div>
+							<h4>
+								Highscore:{" "}
+								{highscore.score >= currentScore
+									? highscore.username || "No highscore"
+									: username}{" "}
+								-{" "}
+								{highscore.score >= currentScore
+									? highscore.score
+									: currentScore}
+							</h4>
+						</div>
+						<form>
+							<input
+								id="value"
+								value={value}
+								onChange={this.handleChange}
+								onSubmit={this.handleSubmit}
+							/>
+							<button type="submit" onClick={this.handleSubmit}>
+								Submit
+							</button>
+						</form>
+						<div>{prompt}</div>
+						{this.foundWords()}
+						{this.remainingWords()}
+					</div>
+				)}
+			</div>
+		);
+	}
 	async componentDidMount() {
 		const { challengeId } = this.state;
+		firebase.auth().onAuthStateChanged((user) => {
+			if (user) {
+				this.setState({ username: user.displayName });
+			}
+		});
 		const db = firebase.firestore();
 		const data = await (
 			await db.collection("boggles").doc(challengeId).get()
 		).data();
 		if (data) {
-			const { boggle, dictionary, size } = data;
+			const { boggle, dictionary, size, highscore } = data;
 			var i, j;
 			var currIndex = 0;
 			let matrix = [];
@@ -53,48 +123,18 @@ class Challenge extends Component {
 			this.setState({
 				grid: matrix,
 				dictionary: dictionary,
+				highscore: highscore,
 				loading: false,
+				guessesLeft: dictionary.length,
 			});
 		}
-	}
-
-	render() {
-		const { value, prompt, grid, loading, gameStarted } = this.state;
-		return (
-			<div align="center">
-				{loading ? (
-					<div>Loading...</div>
-				) : (
-					<div>
-						{this.startStopButtons()}
-						{gameStarted ? <Grid grid={grid} /> : <div></div>}
-						<form>
-							<input
-								id="value"
-								value={value}
-								onChange={this.handleChange}
-								onSubmit={this.handleSubmit}
-							/>
-							<button type="submit" onClick={this.handleSubmit}>
-								Submit
-							</button>
-						</form>
-
-						<div>{prompt}</div>
-
-						{this.foundWords()}
-						{this.remainingWords()}
-					</div>
-				)}
-			</div>
-		);
 	}
 
 	startStopButtons = () => {
 		return (
 			<div>
 				<button onClick={this.startGame}>Start</button>
-				<button onClick={this.stopGame}>Stop</button>
+				<button onClick={this.handleGameOver}>Stop</button>
 			</div>
 		);
 	};
@@ -126,13 +166,17 @@ class Challenge extends Component {
 		this.setState({ [event.target.id]: event.target.value.toUpperCase() });
 	}
 
-	handleSubmit(event) {
+	async handleSubmit(event) {
 		event.preventDefault();
 		const { value, found, solutions } = this.state;
+		await this.setState({ guessesLeft: this.state.guessesLeft - 1 });
 		if (found.includes(value)) {
 			this.setState({ prompt: `${value} already found` });
 		} else if (solutions.includes(value)) {
-			this.setState({ prompt: `${value} is CORRECT!` });
+			this.setState({
+				prompt: `${value} is CORRECT!`,
+				currentScore: this.state.currentScore + 1,
+			});
 			if (found.length + 1 === solutions.length) {
 				this.setState({ prompt: `All words have been found!!` });
 			}
@@ -140,7 +184,23 @@ class Challenge extends Component {
 		} else {
 			this.setState({ prompt: `${value} is wrong` });
 		}
+		if (this.state.guessesLeft == 0) {
+			this.handleGameOver();
+		}
 		this.setState({ value: "" });
+	}
+
+	async handleGameOver() {
+		const { currentScore, highscore, username, challengeId } = this.state;
+		this.setState({ gameEnded: true });
+		if (currentScore > highscore.score) {
+			const db = firebase.firestore();
+			const newHighscore = { username, score: currentScore };
+			await db
+				.collection("boggles")
+				.doc(challengeId)
+				.update({ highscore: newHighscore });
+		}
 	}
 
 	startGame() {
@@ -148,10 +208,6 @@ class Challenge extends Component {
 		const solutions = findAllSolutions(grid, dictionary);
 		uppercaseStringArray(solutions);
 		this.setState({ solutions, gameStarted: true });
-	}
-
-	stopGame() {
-		this.setState({ gameEnded: true });
 	}
 }
 

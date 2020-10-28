@@ -17,9 +17,6 @@ class Challenges extends Component {
 		const { challenges } = this.state;
 		return (
 			<div align="center">
-				<h1>
-					Welcome {firebase.auth().currentUser?.displayName || ""}
-				</h1>
 				<button onClick={this.loadChallenges}>Load Challenges</button>
 				<hr />
 				{challenges.map((challenge) =>
@@ -33,6 +30,10 @@ class Challenges extends Component {
 		return (
 			<div key={challenge.id} className="grid-wrapper">
 				<Grid grid={challenge.grid} />
+				<div>
+					Highscore: {challenge.highscore.username || "No highscore"}{" "}
+					- {challenge.highscore.score}
+				</div>
 				<button id={challenge.id} onClick={this.handlePlay}>
 					Play
 				</button>
@@ -46,7 +47,6 @@ class Challenges extends Component {
 
 	loadChallenges = async () => {
 		const db = firebase.firestore();
-		let challenges = [];
 		let newChallenges = [];
 		let challenge = {};
 		await db
@@ -55,7 +55,7 @@ class Challenges extends Component {
 			.then((snapShot) => {
 				snapShot.forEach((doc) => {
 					challenge = doc.data();
-					const { boggle, dictionary, size } = challenge;
+					const { boggle, dictionary, size, highscore } = challenge;
 					var i, j;
 					var currIndex = 0;
 					let matrix = [];
@@ -71,12 +71,10 @@ class Challenges extends Component {
 						dictionary,
 						grid: matrix,
 						id: doc.id,
+						highscore,
 					});
 				});
 			});
-		challenges.forEach((challenge) => {
-			this.state.challenges.push(challenge);
-		});
 		this.setState({ challenges: newChallenges });
 	};
 }
