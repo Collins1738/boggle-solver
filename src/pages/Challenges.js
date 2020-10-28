@@ -1,17 +1,9 @@
-// import "./App.css";
 import React, { Component } from "react";
 import "../boggle-solver-code";
-import { findAllSolutions } from "../boggle-solver-code";
 import firebase from "firebase";
-import ChallengePage from "./Challenge";
 import Grid from "../components/grid";
 import "../App.css";
 
-function uppercaseStringArray(stringArray) {
-	for (let i = 0; i < stringArray.length; i++) {
-		stringArray[i] = stringArray[i].toUpperCase();
-	}
-}
 class Challenges extends Component {
 	constructor() {
 		super();

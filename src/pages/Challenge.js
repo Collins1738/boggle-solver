@@ -1,4 +1,4 @@
-// import "./App.css";
+import "../App.css";
 import React, { Component } from "react";
 import "../boggle-solver-code";
 import { findAllSolutions } from "../boggle-solver-code";
