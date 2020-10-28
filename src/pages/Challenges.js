@@ -1,8 +1,8 @@
-import React, { Component } from "react";
+import "../App.css";
 import "../boggle-solver-code";
 import firebase from "firebase";
 import Grid from "../components/grid";
-import "../App.css";
+import React, { Component } from "react";
 
 class Challenges extends Component {
 	constructor() {
@@ -55,7 +55,7 @@ class Challenges extends Component {
 			.then((snapShot) => {
 				snapShot.forEach((doc) => {
 					challenge = doc.data();
-					const { boggle, dictionary, size, highscore } = challenge;
+					const { boggle, dictionary, highscore, size } = challenge;
 					var i, j;
 					var currIndex = 0;
 					let matrix = [];
@@ -70,8 +70,8 @@ class Challenges extends Component {
 					newChallenges.push({
 						dictionary,
 						grid: matrix,
-						id: doc.id,
 						highscore,
+						id: doc.id,
 					});
 				});
 			});

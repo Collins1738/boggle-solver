@@ -1,10 +1,10 @@
 import "./App.css";
-import React, { Component } from "react";
-import firebase from "firebase";
-import ChallengesPage from "./pages/Challenges";
-import ChallengePage from "./pages/Challenge";
-import LoginPage from "./pages/Login";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import ChallengePage from "./pages/Challenge";
+import ChallengesPage from "./pages/Challenges";
+import firebase from "firebase";
+import LoginPage from "./pages/Login";
+import React, { Component } from "react";
 
 class App extends Component {
 	constructor() {

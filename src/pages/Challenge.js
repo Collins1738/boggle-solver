@@ -1,9 +1,9 @@
 import "../App.css";
-import React, { Component } from "react";
 import "../boggle-solver-code";
 import { findAllSolutions } from "../boggle-solver-code";
 import firebase from "firebase";
 import Grid from "../components/grid";
+import React, { Component } from "react";
 
 function uppercaseStringArray(stringArray) {
 	for (let i = 0; i < stringArray.length; i++) {
@@ -15,38 +15,38 @@ class Challenge extends Component {
 		super(props);
 		this.state = {
 			challengeId: this.props.match.params.challengeId,
-			grid: [],
-			dictionary: [],
-			solutions: [],
-			value: "",
-			found: [],
-			prompt: "",
-			gameStarted: false,
-			gameEnded: false,
-			loading: true,
-			highscore: null,
 			currentScore: 0,
+			dictionary: [],
+			found: [],
+			gameEnded: false,
+			gameStarted: false,
+			grid: [],
 			guessesLeft: 0,
+			highscore: null,
+			loading: true,
+			prompt: "",
+			solutions: [],
 			username: "Anonymous",
+			value: "",
 		};
 		this.handleChange = this.handleChange.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
 		this.handleGameOver = this.handleGameOver.bind(this);
+		this.handleSubmit = this.handleSubmit.bind(this);
 		this.startGame = this.startGame.bind(this);
 	}
 
 	render() {
 		const {
-			value,
-			prompt,
-			grid,
-			loading,
-			gameStarted,
-			highscore,
-			username,
 			currentScore,
-			guessesLeft,
 			gameEnded,
+			gameStarted,
+			grid,
+			guessesLeft,
+			highscore,
+			loading,
+			prompt,
+			username,
+			value,
 		} = this.state;
 		return (
 			<div align="center">
@@ -154,7 +154,7 @@ class Challenge extends Component {
 	};
 
 	remainingWords = () => {
-		const { gameEnded, solutions, found } = this.state;
+		const { found, gameEnded, solutions } = this.state;
 		var remainingWords = [];
 		solutions.forEach((word) => {
 			if (!found.includes(word)) {
@@ -174,7 +174,7 @@ class Challenge extends Component {
 
 	async handleSubmit(event) {
 		event.preventDefault();
-		const { value, found, solutions } = this.state;
+		const { found, solutions, value } = this.state;
 		await this.setState({ guessesLeft: this.state.guessesLeft - 1 });
 		if (found.includes(value)) {
 			this.setState({ prompt: `${value} already found` });
@@ -197,7 +197,7 @@ class Challenge extends Component {
 	}
 
 	async handleGameOver() {
-		const { currentScore, highscore, username, challengeId } = this.state;
+		const { challengeId, currentScore, highscore, username } = this.state;
 		this.setState({ gameEnded: true });
 		if (currentScore > highscore.score) {
 			const db = firebase.firestore();
@@ -210,7 +210,7 @@ class Challenge extends Component {
 	}
 
 	startGame() {
-		const { grid, dictionary } = this.state;
+		const { dictionary, grid } = this.state;
 		const solutions = findAllSolutions(grid, dictionary);
 		uppercaseStringArray(solutions);
 		this.setState({ solutions, gameStarted: true });
