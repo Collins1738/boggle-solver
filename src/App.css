@@ -1,16 +1,11 @@
 .App {
 	text-align: center;
+	background-color: wheat;
 }
 
 .App-logo {
 	height: 40vmin;
 	pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-	.App-logo {
-		animation: App-logo-spin infinite 20s linear;
-	}
 }
 
 .App-header {
@@ -42,6 +37,7 @@
 	padding: 10px;
 	border: 5px solid gray;
 	margin: 0;
+	background-color: white;
 	/* position: absolute; */
 }
 
@@ -56,4 +52,18 @@
 	/* grid-template-rows: 80px 200px; */
 	display: grid;
 	width: 240px;
+}
+
+.page {
+	margin: 20px auto 80px auto;
+	max-width: 800px;
+	text-align: center;
+}
+
+.grid-wrapper {
+	margin: 50px;
+}
+
+.navbar {
+	margin: 50px;
 }
