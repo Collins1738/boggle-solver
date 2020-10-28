@@ -109,11 +109,11 @@ class Challenge extends Component {
 
 	remainingWords = () => {
 		const { gameEnded, solutions, found } = this.state;
-		var remainingWords = solutions.map((word) => {
+		var remainingWords = [];
+		solutions.forEach((word) => {
 			if (!found.includes(word)) {
-				return <div key={word}>{word}</div>;
+				remainingWords.push(<div key={word}>{word}</div>);
 			}
-			return;
 		});
 		return gameEnded ? (
 			<div>Remaining Words: {remainingWords}</div>
